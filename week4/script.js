@@ -1,28 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Unit Converter</title><link rel="stylesheet" href="styles.css"></head>
-<body>
-<main>
-  <h1>Unit Converter</h1>
-  <section class="card">
-    <h2>Temperature</h2>
-    <label>Value <input id="tempVal" type="number" value="0"></label>
-    <select id="tempFrom"><option>Celsius</option><option>Fahrenheit</option><option>Kelvin</option></select>
-    <select id="tempTo"><option>Fahrenheit</option><option>Celsius</option><option>Kelvin</option></select>
-    <button id="tempBtn">Convert</button>
-    <p id="tempOut"></p>
-  </section>
-  <section class="card">
-    <h2>Length</h2>
-    <label>Value <input id="lenVal" type="number" value="1"></label>
-    <select id="lenFrom"><option>Meter</option><option>Kilometer</option><option>Centimeter</option></select>
-    <select id="lenTo"><option>Kilometer</option><option>Meter</option><option>Centimeter</option></select>
-    <button id="lenBtn">Convert</button>
-    <p id="lenOut"></p>
-  </section>
-</main>
-<script src="script.js"></script>
-</body>
-</html>
+const k = {
+  CtoF:c=>c*9/5+32, FtoC:f=>(f-32)*5/9, CtoK:c=>c+273.15, KtoC:k=>k-273.15,
+};
+function convertTemp(v, from, to){
+  const map = {Celsius:'C', Fahrenheit:'F', Kelvin:'K'};
+  from = map[from]; to = map[to];
+  if(from===to) return v;
+  let C;
+  if(from==='C') C=v;
+  else if(from==='F') C=k.FtoC(v);
+  else C=k.KtoC(v);
+  if(to==='C') return C;
+  if(to==='F') return k.CtoF(C);
+  return k.CtoK(C);
+}
+const lenMap = { Meter:1, Kilometer:1000, Centimeter:0.01 };
+function convertLen(v, from, to){ return v*lenMap[from]/lenMap[to]; }
+document.getElementById('tempBtn').onclick=()=>{
+  const v=Number(tempVal.value);
+  tempOut.textContent = convertTemp(v, tempFrom.value, tempTo.value).toFixed(2);
+};
+document.getElementById('lenBtn').onclick=()=>{
+  const v=Number(lenVal.value);
+  lenOut.textContent = convertLen(v, lenFrom.value, lenTo.value).toFixed(3);
+};
